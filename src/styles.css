@@ -37,6 +37,7 @@
 }
 
 /* Default = Purple Aurora */
+:root,
 .theme-purple {
   --radius: 0.85rem;
   --background: oklch(0.08 0.02 280);
