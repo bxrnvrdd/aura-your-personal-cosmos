@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Check, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useReminders, uid, ymd } from "@/lib/aura/store";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -34,15 +34,13 @@ export function RemindersView() {
       <div className="space-y-2">
         {reminders.map((r) => (
           <div key={r.id} className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
-            <button
-              onClick={() => toggle(r.id)}
-              className={cn(
-                "grid h-6 w-6 place-items-center rounded-md border",
-                r.done ? "border-accent bg-accent text-accent-foreground" : "border-border",
-              )}
-            >
-              {r.done && <Check className="h-3.5 w-3.5" />}
-            </button>
+            {/* Native Ticking Checkbox */}
+            <input
+              type="checkbox"
+              checked={r.done}
+              onChange={() => toggle(r.id)}
+              className="h-5 w-5 rounded border-border accent-accent cursor-pointer"
+            />
             <div className={cn("flex-1", r.done && "line-through text-muted-foreground")}>{r.text}</div>
             <div className="text-xs text-muted-foreground">{new Date(r.date).toLocaleDateString()}</div>
             <button onClick={() => remove(r.id)} className="text-muted-foreground hover:text-destructive">
