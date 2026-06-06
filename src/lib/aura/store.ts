@@ -32,7 +32,9 @@ function subscribe(key: string, cb: () => void) {
     subs.set(key, set);
   }
   set.add(cb);
-  return () => set!.delete(cb);
+  return () => {
+    set!.delete(cb);
+  };
 }
 function emit(key: string) {
   subs.get(key)?.forEach((cb) => cb());
