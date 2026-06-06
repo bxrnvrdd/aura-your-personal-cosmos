@@ -155,40 +155,53 @@ export function CalendarView() {
                 onClick={() => setSelected(key)}
                 onDoubleClick={() => openNew(key)}
                 className={cn(
-                  "group relative flex h-24 flex-col items-start rounded-xl border bg-card p-2 text-left transition-all",
+                  "group relative flex h-24 flex-col items-start overflow-hidden rounded-xl border p-2 text-left transition-all",
                   inMonth ? "opacity-100" : "opacity-30",
-                  isSelected
-                    ? "border-accent glow-accent"
-                    : "border-border/60 hover:border-accent/60",
+                  isToday
+                    ? "border-accent bg-accent text-accent-foreground glow-accent"
+                    : isSelected
+                      ? "border-accent bg-card glow-accent"
+                      : "border-border/60 bg-card hover:border-accent/60",
                 )}
               >
                 <span
                   className={cn(
                     "font-display text-lg",
-                    isToday ? "text-accent" : "text-foreground",
+                    isToday ? "text-accent-foreground" : "text-foreground",
                   )}
                 >
                   {date.getDate()}
                 </span>
-                <div className="mt-auto flex flex-wrap gap-1">
-                  {dayHolidays.slice(0, 1).map((h, idx) => (
+                <div className="mt-1 flex w-full flex-col gap-0.5 text-[10px] leading-tight">
+                  {dayHolidays.slice(0, 2).map((h, idx) => (
                     <span
                       key={`h${idx}`}
                       title={h}
-                      className="h-1.5 w-1.5 rounded-full bg-accent"
-                    />
+                      className={cn(
+                        "truncate rounded px-1 py-px font-medium",
+                        isToday
+                          ? "bg-accent-foreground/15 text-accent-foreground"
+                          : "bg-accent/15 text-accent",
+                      )}
+                    >
+                      {h}
+                    </span>
                   ))}
-                  {dayEvents.slice(0, 3).map((e, idx) => (
+                  {dayEvents.slice(0, 2).map((e, idx) => (
                     <span
                       key={`e${idx}`}
                       title={e.title}
-                      className="h-1.5 w-1.5 rounded-full bg-foreground/70"
-                    />
+                      className={cn(
+                        "truncate rounded px-1 py-px",
+                        isToday
+                          ? "bg-accent-foreground/10 text-accent-foreground"
+                          : "bg-secondary/70 text-foreground/80",
+                      )}
+                    >
+                      {e.title}
+                    </span>
                   ))}
                 </div>
-                {dayHolidays.length > 0 && (
-                  <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-accent" />
-                )}
               </button>
             );
           })}
