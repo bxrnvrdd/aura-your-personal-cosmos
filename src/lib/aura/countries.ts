@@ -1,51 +1,24 @@
-// Common countries for the picker. date-holidays supports all of these.
-export const COUNTRIES: { code: string; name: string; flag: string }[] = [
-  { code: "US", name: "United States", flag: "🇺🇸" },
-  { code: "GB", name: "United Kingdom", flag: "🇬🇧" },
-  { code: "CA", name: "Canada", flag: "🇨🇦" },
-  { code: "AU", name: "Australia", flag: "🇦🇺" },
-  { code: "IN", name: "India", flag: "🇮🇳" },
-  { code: "DE", name: "Germany", flag: "🇩🇪" },
-  { code: "FR", name: "France", flag: "🇫🇷" },
-  { code: "ES", name: "Spain", flag: "🇪🇸" },
-  { code: "IT", name: "Italy", flag: "🇮🇹" },
-  { code: "NL", name: "Netherlands", flag: "🇳🇱" },
-  { code: "SE", name: "Sweden", flag: "🇸🇪" },
-  { code: "NO", name: "Norway", flag: "🇳🇴" },
-  { code: "DK", name: "Denmark", flag: "🇩🇰" },
-  { code: "FI", name: "Finland", flag: "🇫🇮" },
-  { code: "IE", name: "Ireland", flag: "🇮🇪" },
-  { code: "PT", name: "Portugal", flag: "🇵🇹" },
-  { code: "BR", name: "Brazil", flag: "🇧🇷" },
-  { code: "MX", name: "Mexico", flag: "🇲🇽" },
-  { code: "AR", name: "Argentina", flag: "🇦🇷" },
-  { code: "CL", name: "Chile", flag: "🇨🇱" },
-  { code: "JP", name: "Japan", flag: "🇯🇵" },
-  { code: "CN", name: "China", flag: "🇨🇳" },
-  { code: "KR", name: "South Korea", flag: "🇰🇷" },
-  { code: "SG", name: "Singapore", flag: "🇸🇬" },
-  { code: "HK", name: "Hong Kong", flag: "🇭🇰" },
-  { code: "TW", name: "Taiwan", flag: "🇹🇼" },
-  { code: "TH", name: "Thailand", flag: "🇹🇭" },
-  { code: "VN", name: "Vietnam", flag: "🇻🇳" },
-  { code: "ID", name: "Indonesia", flag: "🇮🇩" },
-  { code: "MY", name: "Malaysia", flag: "🇲🇾" },
-  { code: "PH", name: "Philippines", flag: "🇵🇭" },
-  { code: "AE", name: "United Arab Emirates", flag: "🇦🇪" },
-  { code: "SA", name: "Saudi Arabia", flag: "🇸🇦" },
-  { code: "IL", name: "Israel", flag: "🇮🇱" },
-  { code: "TR", name: "Turkey", flag: "🇹🇷" },
-  { code: "EG", name: "Egypt", flag: "🇪🇬" },
-  { code: "ZA", name: "South Africa", flag: "🇿🇦" },
-  { code: "NG", name: "Nigeria", flag: "🇳🇬" },
-  { code: "KE", name: "Kenya", flag: "🇰🇪" },
-  { code: "NZ", name: "New Zealand", flag: "🇳🇿" },
-  { code: "CH", name: "Switzerland", flag: "🇨🇭" },
-  { code: "AT", name: "Austria", flag: "🇦🇹" },
-  { code: "BE", name: "Belgium", flag: "🇧🇪" },
-  { code: "PL", name: "Poland", flag: "🇵🇱" },
-  { code: "CZ", name: "Czech Republic", flag: "🇨🇿" },
-  { code: "GR", name: "Greece", flag: "🇬🇷" },
-  { code: "RU", name: "Russia", flag: "🇷🇺" },
-  { code: "UA", name: "Ukraine", flag: "🇺🇦" },
-];
+import Holidays from "date-holidays";
+
+// Flag emoji from ISO-2 country code
+function flagOf(code: string): string {
+  if (!/^[A-Z]{2}$/.test(code)) return "🌐";
+  const A = 0x1f1e6;
+  return String.fromCodePoint(A + code.charCodeAt(0) - 65, A + code.charCodeAt(1) - 65);
+}
+
+export type Country = { code: string; name: string; flag: string };
+
+function build(): Country[] {
+  try {
+    const hd = new Holidays();
+    const raw = hd.getCountries() as Record<string, string>;
+    return Object.entries(raw)
+      .map(([code, name]) => ({ code, name, flag: flagOf(code) }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  } catch {
+    return [{ code: "US", name: "United States", flag: "🇺🇸" }];
+  }
+}
+
+export const COUNTRIES: Country[] = build();

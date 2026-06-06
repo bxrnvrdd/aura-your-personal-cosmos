@@ -40,7 +40,7 @@ function emit(key: string) {
   subs.get(key)?.forEach((cb) => cb());
 }
 
-function usePersistent<T>(key: string, fallback: T) {
+export function usePersistent<T>(key: string, fallback: T) {
   const getInitial = () => {
     if (cache.has(key)) return cache.get(key) as T;
     const v = read<T>(key, fallback);
