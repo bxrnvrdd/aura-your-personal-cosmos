@@ -19,20 +19,52 @@ function write<T>(key: string, value: T) {
   } catch {}
 }
 
+// Shared in-memory cache + subscribers so every component using the same key
+// stays in sync (otherwise each useState is isolated and Settings updates
+// don't propagate to ThemeApplier, Sidebar, etc.).
+const cache = new Map<string, unknown>();
+const subs = new Map<string, Set<() => void>>();
+
+function subscribe(key: string, cb: () => void) {
+  let set = subs.get(key);
+  if (!set) {
+    set = new Set();
+    subs.set(key, set);
+  }
+  set.add(cb);
+  return () => set!.delete(cb);
+}
+function emit(key: string) {
+  subs.get(key)?.forEach((cb) => cb());
+}
+
 function usePersistent<T>(key: string, fallback: T) {
-  const [state, setState] = useState<T>(fallback);
+  const getInitial = () => {
+    if (cache.has(key)) return cache.get(key) as T;
+    const v = read<T>(key, fallback);
+    cache.set(key, v);
+    return v;
+  };
+  const [state, setState] = useState<T>(getInitial);
+
   useEffect(() => {
-    setState(read<T>(key, fallback));
+    // Sync from localStorage on mount (SSR -> client hydration).
+    const v = read<T>(key, fallback);
+    cache.set(key, v);
+    setState(v);
+    return subscribe(key, () => setState(cache.get(key) as T));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [key]);
+
   const update = useCallback(
     (v: T | ((prev: T) => T)) => {
-      setState((prev) => {
-        const next = typeof v === "function" ? (v as (p: T) => T)(prev) : v;
-        write(key, next);
-        return next;
-      });
+      const prev = (cache.get(key) as T) ?? fallback;
+      const next = typeof v === "function" ? (v as (p: T) => T)(prev) : v;
+      cache.set(key, next);
+      write(key, next);
+      emit(key);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [key],
   );
   return [state, update] as const;
