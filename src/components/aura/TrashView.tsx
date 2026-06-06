@@ -1,5 +1,3 @@
-import { useTrash } from "@/lib/aura/store-trash";
-
 export function TrashView() {
   return (
     <div className="flex flex-1 flex-col gap-6 p-8">
