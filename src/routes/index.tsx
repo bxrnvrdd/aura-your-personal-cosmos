@@ -6,7 +6,7 @@ import { EventsView } from "@/components/aura/EventsView";
 import { NotesView } from "@/components/aura/NotesView";
 import { RemindersView } from "@/components/aura/RemindersView";
 import { SettingsView } from "@/components/aura/SettingsView";
-import { TrashView } from "@/components/aura/TrashView";
+import { NewsView } from "@/components/aura/NewsView";
 import { ThemeApplier } from "@/components/aura/ThemeApplier";
 import { useTheme } from "@/lib/aura/store";
 
