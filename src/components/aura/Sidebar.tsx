@@ -1,15 +1,15 @@
-import { Calendar, Inbox, StickyNote, Bell, Trash2, Settings, Sparkles, PanelLeftClose, PanelLeft } from "lucide-react";
+import { Calendar, Inbox, StickyNote, Bell, Newspaper, Settings, Sparkles, PanelLeftClose, PanelLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePersistent } from "@/lib/aura/store";
 
-export type ViewId = "calendar" | "events" | "notes" | "reminders" | "trash" | "settings";
+export type ViewId = "calendar" | "events" | "notes" | "reminders" | "news" | "settings";
 
 const NAV: { id: ViewId; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: "calendar", label: "Calendar", icon: Calendar },
   { id: "events", label: "Events", icon: Inbox },
   { id: "notes", label: "Notes", icon: StickyNote },
   { id: "reminders", label: "Reminders", icon: Bell },
-  { id: "trash", label: "Trash", icon: Trash2 },
+  { id: "news", label: "News", icon: Newspaper },
 ];
 
 export function useSidebarCollapsed() {
@@ -56,16 +56,25 @@ export function Sidebar({
       </div>
 
       {!collapsed ? (
-        <div className="mb-8 rounded-2xl bg-accent p-5 text-accent-foreground glow-accent">
+        <button
+          onClick={() => onView("news")}
+          title="Open today's news"
+          className="mb-8 block w-full rounded-2xl bg-accent p-5 text-left text-accent-foreground glow-accent transition-transform hover:scale-[1.02]"
+        >
           <div className="font-display text-7xl leading-none">{day}</div>
           <div className="mt-2 text-sm opacity-80">
             {month} {year}
           </div>
-        </div>
+          <div className="mt-3 text-[10px] uppercase tracking-widest opacity-70">Tap for news</div>
+        </button>
       ) : (
-        <div className="mb-6 grid h-12 w-full place-items-center rounded-xl bg-accent font-display text-2xl text-accent-foreground">
+        <button
+          onClick={() => onView("news")}
+          title="Open today's news"
+          className="mb-6 grid h-12 w-full place-items-center rounded-xl bg-accent font-display text-2xl text-accent-foreground hover:opacity-90"
+        >
           {day}
-        </div>
+        </button>
       )}
 
       <nav className="flex flex-1 flex-col gap-1">
