@@ -140,22 +140,21 @@ export const getDailyNews = createServerFn({ method: "GET" })
       fetchReddit(),
       fetchWikiBios(data.month, data.day),
     ]);
-    // 3 headlines from each source, shuffle for pinterest variety
-    const pick = (arr: NewsItem[]) => arr.slice(0, 3);
-    const combined = [...pick(bbc), ...pick(cnn), ...pick(dexerto), ...pick(reddit), ...pick(wiki)];
-    // simple interleave so sources mix in masonry
-    const out: NewsItem[] = [];
+    // 6 headlines per source -> 30 total, interleaved for pinterest variety
+    const pick = (arr: NewsItem[]) => arr.slice(0, 6);
     const buckets = [pick(bbc), pick(cnn), pick(dexerto), pick(reddit), pick(wiki)];
+    const out: NewsItem[] = [];
     let added = true;
-    while (added) {
+    while (added && out.length < 30) {
       added = false;
       for (const b of buckets) {
         const next = b.shift();
         if (next) {
           out.push(next);
           added = true;
+          if (out.length >= 30) break;
         }
       }
     }
-    return { items: out, total: combined.length };
+    return { items: out, total: out.length };
   });
