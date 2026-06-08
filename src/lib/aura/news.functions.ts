@@ -74,7 +74,7 @@ async function fetchRss(url: string, source: string, kind: NewsItem["kind"]): Pr
 
 async function fetchReddit(): Promise<NewsItem[]> {
   try {
-    const res = await fetch("https://www.reddit.com/r/stories/top.json?t=day&limit=8", {
+    const res = await fetch("https://www.reddit.com/r/stories/top.json?t=day&limit=10", {
       headers: { "user-agent": "AuraCalendar/1.0" },
     });
     if (!res.ok) return [];
@@ -111,7 +111,7 @@ async function fetchWikiBios(month: number, day: number): Promise<NewsItem[]> {
     );
     if (!res.ok) return [];
     const json: any = await res.json();
-    const births = (json?.births ?? []).slice(0, 8);
+    const births = (json?.births ?? []).slice(0, 10);
     return births.map((b: any): NewsItem => {
       const page = b.pages?.[0];
       return {
