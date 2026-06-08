@@ -1,15 +1,15 @@
-import { Calendar, Inbox, StickyNote, Bell, Trash2, Settings, Sparkles, PanelLeftClose, PanelLeft } from "lucide-react";
+import { Calendar, Inbox, StickyNote, Bell, Newspaper, Settings, Sparkles, PanelLeftClose, PanelLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePersistent } from "@/lib/aura/store";
 
-export type ViewId = "calendar" | "events" | "notes" | "reminders" | "trash" | "settings";
+export type ViewId = "calendar" | "events" | "notes" | "reminders" | "news" | "settings";
 
 const NAV: { id: ViewId; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: "calendar", label: "Calendar", icon: Calendar },
   { id: "events", label: "Events", icon: Inbox },
   { id: "notes", label: "Notes", icon: StickyNote },
   { id: "reminders", label: "Reminders", icon: Bell },
-  { id: "trash", label: "Trash", icon: Trash2 },
+  { id: "news", label: "News", icon: Newspaper },
 ];
 
 export function useSidebarCollapsed() {
