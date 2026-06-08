@@ -66,7 +66,7 @@ async function fetchRss(url: string, source: string, kind: NewsItem["kind"]): Pr
     const res = await fetch(url, { headers: { "user-agent": "AuraCalendar/1.0" } });
     if (!res.ok) return [];
     const xml = await res.text();
-    return parseRss(xml, source, kind).slice(0, 8);
+    return parseRss(xml, source, kind).slice(0, 10);
   } catch {
     return [];
   }
@@ -74,7 +74,7 @@ async function fetchRss(url: string, source: string, kind: NewsItem["kind"]): Pr
 
 async function fetchReddit(): Promise<NewsItem[]> {
   try {
-    const res = await fetch("https://www.reddit.com/r/stories/top.json?t=day&limit=8", {
+    const res = await fetch("https://www.reddit.com/r/stories/top.json?t=day&limit=10", {
       headers: { "user-agent": "AuraCalendar/1.0" },
     });
     if (!res.ok) return [];
@@ -111,7 +111,7 @@ async function fetchWikiBios(month: number, day: number): Promise<NewsItem[]> {
     );
     if (!res.ok) return [];
     const json: any = await res.json();
-    const births = (json?.births ?? []).slice(0, 8);
+    const births = (json?.births ?? []).slice(0, 10);
     return births.map((b: any): NewsItem => {
       const page = b.pages?.[0];
       return {
@@ -140,22 +140,21 @@ export const getDailyNews = createServerFn({ method: "GET" })
       fetchReddit(),
       fetchWikiBios(data.month, data.day),
     ]);
-    // 3 headlines from each source, shuffle for pinterest variety
-    const pick = (arr: NewsItem[]) => arr.slice(0, 3);
-    const combined = [...pick(bbc), ...pick(cnn), ...pick(dexerto), ...pick(reddit), ...pick(wiki)];
-    // simple interleave so sources mix in masonry
-    const out: NewsItem[] = [];
+    // 6 headlines per source -> 30 total, interleaved for pinterest variety
+    const pick = (arr: NewsItem[]) => arr.slice(0, 6);
     const buckets = [pick(bbc), pick(cnn), pick(dexerto), pick(reddit), pick(wiki)];
+    const out: NewsItem[] = [];
     let added = true;
-    while (added) {
+    while (added && out.length < 30) {
       added = false;
       for (const b of buckets) {
         const next = b.shift();
         if (next) {
           out.push(next);
           added = true;
+          if (out.length >= 30) break;
         }
       }
     }
-    return { items: out, total: combined.length };
+    return { items: out, total: out.length };
   });
