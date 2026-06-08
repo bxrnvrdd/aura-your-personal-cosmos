@@ -66,7 +66,7 @@ async function fetchRss(url: string, source: string, kind: NewsItem["kind"]): Pr
     const res = await fetch(url, { headers: { "user-agent": "AuraCalendar/1.0" } });
     if (!res.ok) return [];
     const xml = await res.text();
-    return parseRss(xml, source, kind).slice(0, 8);
+    return parseRss(xml, source, kind).slice(0, 10);
   } catch {
     return [];
   }
