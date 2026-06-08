@@ -36,7 +36,7 @@ function Index() {
         {view === "events" && <EventsView />}
         {view === "notes" && <NotesView />}
         {view === "reminders" && <RemindersView />}
-        {view === "trash" && <TrashView />}
+        {view === "news" && <NewsView date={today} />}
         {view === "settings" && <SettingsView />}
       </main>
     </div>
