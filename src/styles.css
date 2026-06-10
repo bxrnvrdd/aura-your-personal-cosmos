@@ -2,6 +2,14 @@
 @source "../src";
 @import "tw-animate-css";
 
+@font-face {
+  font-family: "Mashiro";
+  src: url("/__l5e/assets-v1/1774e5c8-a5ea-4f1e-ac62-34311d52fe9c/Mashiro-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -114,8 +122,8 @@
   --sidebar: oklch(0.02 0 0);
   --sidebar-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(1 0 0 / 15%);
-  --font-display: "Japanese Neotokyo", "Rampart One", "JetBrains Mono", ui-monospace, monospace;
-  --font-body: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Mashiro", "Japanese Neotokyo", "Rampart One", ui-monospace, monospace;
+  --font-body: "Mashiro", "JetBrains Mono", ui-monospace, monospace;
   --glow: 0 0 60px oklch(1 0 0 / 0.15);
 }
 
